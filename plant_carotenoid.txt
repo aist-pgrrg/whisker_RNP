@@ -1,0 +1,7 @@
+genotype	b-carotene	luteinacetate	antheraxanthin	violaxanthin	lutein
+plant-lcyb	7.81	13.56	0.00	0.00	0.00
+plant-lcyb	7.43	10.58	0.00	0.00	0.00
+plant-lcyb	8.55	12.78	0.00	0.00	0.00
+plant-wt	36.73	2.13	8.01	6.77	1.49
+plant-wt	36.75	2.12	7.16	9.31	1.29
+plant-wt	33.70	1.86	6.48	10.49	1.16

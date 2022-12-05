@@ -1,0 +1,56 @@
+---
+title: "220315_whisker"
+author: "Suagno"
+date: "2022/3/15"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+callus_carotenoid <- read.table("./callus_carotenoid.txt", header = TRUE,sep="\t")
+plant_carotenoid <- read.table("./plant_carotenoid.txt", header = TRUE,sep="\t")
+```
+
+```{r}
+callus_lycopene_plot <- ggplot(callus_carotenoid, aes(x = genotype, y = lycopene))
+callus_lycopene_plot <- callus_lycopene_plot + geom_boxplot(outlier.shape = NA) + ylab( "µg/FWg" ) + ggtitle("Lycopene") + theme(plot.title = element_text(hjust = 0.5))
+callus_lycopene_plot <- callus_lycopene_plot + geom_jitter(size = 2) +  scale_x_discrete(limit=c('callus-wt','callus-lcyb'))
+plot(callus_lycopene_plot)
+```
+
+```{r}
+callus_dcarotene_plot <- ggplot(callus_carotenoid, aes(x = genotype, y = d.carotene))
+callus_dcarotene_plot <- callus_dcarotene_plot + geom_boxplot(outlier.shape = NA) + ylab( "µg/FWg" ) + ggtitle("δ-carotene") + theme(plot.title = element_text(hjust = 0.5))
+callus_dcarotene_plot <- callus_dcarotene_plot + geom_jitter(size = 2) +  scale_x_discrete(limit=c('callus-wt','callus-lcyb'))
+plot(callus_dcarotene_plot)
+```
+
+```{r}
+grid.arrange(callus_lycopene_plot, callus_dcarotene_plot, ncol = 2)
+```
+
+```{r}
+library(reshape2)
+library(scales)
+
+callus_carotenoid_melt <- melt(callus_carotenoid,id.vars='genotype', measure.vars=c('lycopene','d.carotene'))
+
+callus_plot_reshape2 <- ggplot(callus_carotenoid_melt)
+callus_plot_reshape2 <- callus_plot_reshape2 + geom_boxplot(aes(x=genotype, y=value, color=variable), position=position_dodge(0.8)) 
+callus_plot_reshape2 <- callus_plot_reshape2 + xlab("genotype") + ylab("µg/FWg") +  scale_x_discrete(limit=c('callus-wt','callus-lcyb')) 
+callus_plot_reshape2 <- callus_plot_reshape2 + geom_jitter(position=position_dodge(0.8), aes(x=genotype, y=value, color=variable)) + labs(shape="genotype", colors="variable")
+plot(callus_plot_reshape2)
+```
+
+
+```{r}
+library(reshape2)
+library(scales)
+
+plant_carotenoid_melt <- melt(plant_carotenoid,id.vars='genotype', measure.vars=c('b.carotene',	'luteinacetate', 'antheraxanthin', 'violaxanthin', 'lutein'))
+
+plant_plot_reshape2 <- ggplot(plant_carotenoid_melt)
+plant_plot_reshape2 <- plant_plot_reshape2 + geom_boxplot(aes(x=genotype, y=value, color=variable), position=position_dodge(0.8)) + xlab("genotype") + ylab("µg/FWg") +  scale_x_discrete(limit=c('plant-wt','plant-lcyb'))  + geom_jitter(position=position_dodge(0.8), aes(x=genotype, y=value, color=variable)) 
+plot(plant_plot_reshape2)
+```
+
+

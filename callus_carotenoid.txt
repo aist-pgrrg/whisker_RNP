@@ -1,0 +1,7 @@
+genotype	lycopene	d-carotene
+callus-lcyb	1.02	3.14
+callus-lcyb	1.48	5.46
+callus-lcyb	0.86	2.86
+callus-wt	0.00	0.00
+callus-wt	0.00	0.00
+callus-wt	0.00	0.00
