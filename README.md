@@ -1,8 +1,9 @@
 # whisker_RNP
 
-Data:
+# Data:
 callus_carotenoid.txt contains the data of carotenoid quantification in callus
+
 plant_carotenoid.txt contains the data of carotenoid quantification in regenerated shoots
 
-Code:
+# Code:
 whisker_RNP.Rmd contains all the code for data visualization
