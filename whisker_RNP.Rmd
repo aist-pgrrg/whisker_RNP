@@ -1,6 +1,6 @@
 ---
 title: "220315_whisker"
-author: "Suagno"
+author: "Sugano"
 date: "2022/3/15"
 output: html_document
 ---
@@ -8,15 +8,33 @@ output: html_document
 ```{r setup, include=FALSE}
 callus_carotenoid <- read.table("./callus_carotenoid.txt", header = TRUE,sep="\t")
 plant_carotenoid <- read.table("./plant_carotenoid.txt", header = TRUE,sep="\t")
+library(ggplot2)
 ```
 
+#Plot lycopene data in callus
 ```{r}
 callus_lycopene_plot <- ggplot(callus_carotenoid, aes(x = genotype, y = lycopene))
 callus_lycopene_plot <- callus_lycopene_plot + geom_boxplot(outlier.shape = NA) + ylab( "µg/FWg" ) + ggtitle("Lycopene") + theme(plot.title = element_text(hjust = 0.5))
 callus_lycopene_plot <- callus_lycopene_plot + geom_jitter(size = 2) +  scale_x_discrete(limit=c('callus-wt','callus-lcyb'))
 plot(callus_lycopene_plot)
 ```
+#Statistical test for lycopene
+```{r}
+library(car)
+# Split data into two groups
+wt_lycopene <- callus_carotenoid[callus_carotenoid == "callus-wt", "lycopene"]
+lcyb_lycopene <- callus_carotenoid[callus_carotenoid == "callus-lcyb", "lycopene"]
 
+#normality and equality of variance check
+shapiro.test(wt_lycopene)
+shapiro.test(lcyb_lycopene)
+leveneTest(lycopene ~ genotype, data = callus_carotenoid)
+# Perform t Test
+lycopene_t_test_result <- t.test(wt_lycopene, lcyb_lycopene)
+print(lycopene_wilcox_test_result)
+```
+
+#Plot d.carotene data in callus
 ```{r}
 callus_dcarotene_plot <- ggplot(callus_carotenoid, aes(x = genotype, y = d.carotene))
 callus_dcarotene_plot <- callus_dcarotene_plot + geom_boxplot(outlier.shape = NA) + ylab( "µg/FWg" ) + ggtitle("δ-carotene") + theme(plot.title = element_text(hjust = 0.5))
@@ -24,10 +42,23 @@ callus_dcarotene_plot <- callus_dcarotene_plot + geom_jitter(size = 2) +  scale_
 plot(callus_dcarotene_plot)
 ```
 
+#Statistical test for d.carotene
 ```{r}
-grid.arrange(callus_lycopene_plot, callus_dcarotene_plot, ncol = 2)
+# Split data into two groups
+wt_d_carotene <- callus_carotenoid[callus_carotenoid == "callus-wt", "d.carotene"]
+lcyb_d_carotene <- callus_carotenoid[callus_carotenoid == "callus-lcyb", "d.carotene"]
+
+
+#normality and equality of variance check
+shapiro.test(wt_d_carotene)
+shapiro.test(lcyb_d_carotene)
+leveneTest(lycopene ~ genotype, data = callus_carotenoid)
+# Perform t Test
+dcarotene_t_test_result <- t.test(wt_d_carotene, lcyb_d_carotene)
+print(dcarotene_t_test_result)
 ```
 
+#plot carotenoid data in plantlet
 ```{r}
 library(reshape2)
 library(scales)
@@ -41,7 +72,7 @@ callus_plot_reshape2 <- callus_plot_reshape2 + geom_jitter(position=position_dod
 plot(callus_plot_reshape2)
 ```
 
-
+#plot lycopene and d.carotene data in callus
 ```{r}
 library(reshape2)
 library(scales)
@@ -53,4 +84,33 @@ plant_plot_reshape2 <- plant_plot_reshape2 + geom_boxplot(aes(x=genotype, y=valu
 plot(plant_plot_reshape2)
 ```
 
+#plot mutation size data
+```{r}
+mutation_distribution <- read.table("./mutation_size.txt", header = TRUE,sep="\t")
+mutation_distribution_plot <- ggplot(mutation_distribution, aes(x = Condition, y = Mutation_size,  color=Condition))
+mutation_distribution_plot <- mutation_distribution_plot + 
+  geom_violin(outlier.shape = NA) + 
+  ylab("bp") + 
+  ggtitle("size of mutation") + 
+  scale_x_discrete(limit=c('RNP','plasmid')) +
+  theme(
+    plot.title = element_text(hjust = 0.5), 
+    axis.title.y = element_text(size=15),
+    axis.text.x = element_text(size=15), 
+    axis.text.y = element_text(size=15)
+  )
 
+plot(mutation_distribution_plot)
+mutation_distribution_plot <- mutation_distribution_plot + geom_jitter(aes(x=Condition, y=Mutation_size,color=Condition))
+plot(mutation_distribution_plot)
+```
+
+#Statistical test for mutation size
+```{r}
+# Split data into two groups
+RNP_data <- mutation_distribution[mutation_distribution$Condition == "RNP", "Mutation_size"]
+plasmid_data <- mutation_distribution[mutation_distribution$Condition == "plasmid", "Mutation_size"]
+# Perform Kruskal-Wallis Test
+mutation_size_kw_test_result <- kruskal.test(RNP_data, plasmid_data)
+print(mutation_size_kw_test_result)
+```
