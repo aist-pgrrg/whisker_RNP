@@ -58,7 +58,7 @@ dcarotene_t_test_result <- t.test(wt_d_carotene, lcyb_d_carotene)
 print(dcarotene_t_test_result)
 ```
 
-#plot carotenoid data in plantlet
+#plot lycopene and d.carotene data in callus
 ```{r}
 library(reshape2)
 library(scales)
@@ -72,7 +72,7 @@ callus_plot_reshape2 <- callus_plot_reshape2 + geom_jitter(position=position_dod
 plot(callus_plot_reshape2)
 ```
 
-#plot lycopene and d.carotene data in callus
+#plot carotenoid data in plantlet
 ```{r}
 library(reshape2)
 library(scales)
